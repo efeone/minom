@@ -1,0 +1,194 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2022-08-12 15:34:31.373866",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "project",
+  "discussion_topic",
+  "from_time",
+  "meeting_duration",
+  "column_break_5",
+  "project_name",
+  "date",
+  "to_time",
+  "any_issues",
+  "attendees_section",
+  "attendees",
+  "action_taken_section",
+  "actions",
+  "last_mom_review_section",
+  "review_last_mom",
+  "last_mom_name",
+  "section_break_15",
+  "last_actions",
+  "pending_actions_section",
+  "review_pending_actions",
+  "pending_actions",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Project",
+   "options": "Project",
+   "reqd": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Date"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "MOM",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "discussion_topic",
+   "fieldtype": "Data",
+   "label": "Discussion Topic"
+  },
+  {
+   "fieldname": "from_time",
+   "fieldtype": "Datetime",
+   "label": "From Time"
+  },
+  {
+   "fieldname": "to_time",
+   "fieldtype": "Datetime",
+   "label": "To Time"
+  },
+  {
+   "description": "in minutes",
+   "fieldname": "meeting_duration",
+   "fieldtype": "Float",
+   "label": "Meeting Duration",
+   "read_only": 1
+  },
+  {
+   "default": "Yes",
+   "fieldname": "any_issues",
+   "fieldtype": "Select",
+   "label": "Any Issues",
+   "options": "Yes\nNo"
+  },
+  {
+   "fieldname": "column_break_5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "attendees_section",
+   "fieldtype": "Section Break",
+   "label": "Attendees"
+  },
+  {
+   "fieldname": "action_taken_section",
+   "fieldtype": "Section Break",
+   "label": "Action Taken"
+  },
+  {
+   "fieldname": "last_mom_review_section",
+   "fieldtype": "Section Break",
+   "label": "Last MOM Review"
+  },
+  {
+   "default": "0",
+   "fieldname": "review_last_mom",
+   "fieldtype": "Check",
+   "label": "Review Last MOM "
+  },
+  {
+   "depends_on": "eval:doc.review_last_mom",
+   "fieldname": "last_mom_name",
+   "fieldtype": "Link",
+   "label": "Last MOM Name",
+   "options": "MOM",
+   "read_only": 1
+  },
+  {
+   "fieldname": "pending_actions_section",
+   "fieldtype": "Section Break",
+   "label": "Pending Actions"
+  },
+  {
+   "default": "0",
+   "fieldname": "review_pending_actions",
+   "fieldtype": "Check",
+   "label": "Review Pending Actions"
+  },
+  {
+   "fieldname": "actions",
+   "fieldtype": "Table",
+   "label": "Actions",
+   "options": "Actions Taken"
+  },
+  {
+   "depends_on": "eval:doc.review_pending_actions",
+   "fieldname": "pending_actions",
+   "fieldtype": "Table",
+   "label": "Pending Actions",
+   "options": "Actions Taken"
+  },
+  {
+   "fieldname": "section_break_15",
+   "fieldtype": "Section Break"
+  },
+  {
+   "depends_on": "eval:doc.review_last_mom",
+   "fieldname": "last_actions",
+   "fieldtype": "Table",
+   "label": "Last Actions",
+   "options": "Actions Taken"
+  },
+  {
+   "fieldname": "attendees",
+   "fieldtype": "Table",
+   "label": "Attendees",
+   "options": "Attendees"
+  },
+  {
+   "fetch_from": "project.project_name",
+   "fieldname": "project_name",
+   "fieldtype": "Data",
+   "label": "Project Name",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2022-08-12 16:59:32.602481",
+ "modified_by": "Administrator",
+ "module": "MINutes Of Meeting",
+ "name": "MOM",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}
