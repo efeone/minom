@@ -1,0 +1,32 @@
+{
+ "attach_print": 1,
+ "channel": "Email",
+ "condition": "",
+ "creation": "2022-08-16 12:25:25.370583",
+ "days_in_advance": 0,
+ "docstatus": 0,
+ "doctype": "Notification",
+ "document_type": "MOM",
+ "enabled": 1,
+ "event": "Submit",
+ "idx": 0,
+ "is_standard": 1,
+ "message": "Actions taken in the meeting",
+ "modified": "2022-08-16 14:39:33.461575",
+ "modified_by": "Administrator",
+ "module": "MINutes Of Meeting",
+ "name": "Actions taken in the meeting",
+ "owner": "Administrator",
+ "print_format": "",
+ "recipients": [
+  {
+   "receiver_by_document_field": "user,attendees",
+   "receiver_by_role": ""
+  }
+ ],
+ "send_system_notification": 0,
+ "send_to_all_assignees": 0,
+ "sender": "Avishna Muraleedharan",
+ "sender_email": "m.avishna@efeone.com",
+ "subject": "{{ doc.name }}  Actions taken in the meeting "
+}
