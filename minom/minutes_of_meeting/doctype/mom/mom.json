@@ -22,7 +22,6 @@
   "last_mom_review_section",
   "review_last_mom",
   "last_mom_name",
-  "section_break_15",
   "last_actions",
   "pending_actions_section",
   "review_pending_actions",
@@ -143,10 +142,6 @@
    "options": "Actions Taken"
   },
   {
-   "fieldname": "section_break_15",
-   "fieldtype": "Section Break"
-  },
-  {
    "depends_on": "eval:doc.review_last_mom",
    "fieldname": "last_actions",
    "fieldtype": "Table",
@@ -170,7 +165,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-08-12 16:59:32.602481",
+ "modified": "2022-08-16 10:06:15.807513",
  "modified_by": "Administrator",
  "module": "MINutes Of Meeting",
  "name": "MOM",

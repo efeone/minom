@@ -19,6 +19,7 @@
    "options": "User"
   },
   {
+   "fetch_from": "user.full_name",
    "fieldname": "full_name",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -35,7 +36,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2022-08-12 15:55:02.215064",
+ "modified": "2022-08-16 10:20:42.160744",
  "modified_by": "Administrator",
  "module": "MINutes Of Meeting",
  "name": "Attendees",

@@ -6,3 +6,30 @@ frappe.ui.form.on('MOM', {
 
 	// }
 });
+
+frappe.ui.form.on('Attendees', {
+	user(frm,cdt,cdn) {
+		set_filters(frm);
+	}
+})
+
+let set_filters = function (frm) {
+	if (frm.doc.attendees) {
+		var attendees = '';
+		frm.doc.attendees.forEach(function (attendee, i) {
+			if (i === 0) {
+				attendees += attendee.user;
+			}
+			else {
+				attendees += ', ' + attendee.user;
+			}
+		});
+		frm.set_query('user', 'attendees', function (doc, cdt, cdn) {
+			return {
+				filters: {
+					name: ['not in', attendees]
+				}
+			}
+		});
+	}
+}
