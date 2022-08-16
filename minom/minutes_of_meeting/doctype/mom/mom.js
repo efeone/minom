@@ -2,7 +2,8 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('MOM', {
-	review_pending_actions:function(frm){
+
+	review_pending_actions: function(frm) {
 		if(frm.doc.review_pending_actions && !frm.doc.project){
 			frappe.msgprint({
 				title: __('Notification'),
@@ -17,13 +18,78 @@ frappe.ui.form.on('MOM', {
 			frm.clear_table('pending_actions');
 		}
 	},
-	project:function(frm){
+
+	project: function(frm) {
 		frm.clear_table('pending_actions');
-		frm.set_value('review_pending_actions', 0)
+		frm.clear_table('last_attendees');
+		frm.clear_table('last_actions');
+		frm.set_value('review_pending_actions', 0);
+		frm.set_value('review_last_mom', 0);
+	},
+
+	from_time: function(frm) {
+		if(frm.doc.to_time)
+			calculate_time(frm);
+	},
+
+	to_time: function(frm) {
+		if(frm.doc.from_time) 	
+			calculate_time(frm);
+	},
+
+	review_last_mom: function (frm) {
+		if (frm.doc.review_last_mom) {
+			frm.call('get_last_mom')
+		}
+		else{
+			frm.clear_table('last_attendees');
+			frm.clear_table('last_actions');
+		}
 	}
+
 });
 
-let show_pending_actions = function (frm){
+
+frappe.ui.form.on('Attendees', {
+	user(frm, cdt, cdn) {
+		set_filters(frm);
+	}
+})
+
+let calculate_time = function(frm) {
+	/*
+		to calculate meeting duration
+		output : meeting duration in minutes in meeting_duration field
+	*/
+	let to_time = new Date(frm.doc.to_time)
+	let from_time = new Date(frm.doc.from_time)
+	let duration = ((to_time.getTime() - from_time.getTime())/1000)/60
+	frm.set_value('meeting_duration', duration)
+}
+
+let set_filters = function(frm) {
+	/*	setting filter for user field in attendees child table	*/
+	if (frm.doc.attendees) {
+		let attendees = '';
+		frm.doc.attendees.forEach(function (attendee, i) {
+			if (i === 0) {
+				attendees += attendee.user;
+			}
+			else {
+				attendees += ', ' + attendee.user;
+			}
+		});
+		frm.set_query('user', 'attendees', function (doc, cdt, cdn) {
+			return {
+				filters: {
+					name: ['not in', attendees]
+				}
+			}
+		});
+	}
+}
+
+let show_pending_actions = function (frm) {
 	/*  to show pending tasks
 		output: appending pending_actions child table with uncompleted tasks 
 	*/
