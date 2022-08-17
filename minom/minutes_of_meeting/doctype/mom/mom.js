@@ -3,23 +3,59 @@
 
 frappe.ui.form.on('MOM', {
 
-	review_pending_actions: function(frm) {
-		if(frm.doc.review_pending_actions && !frm.doc.project){
+	review_pending_actions: function (frm) {
+		if (frm.doc.review_pending_actions && !frm.doc.project) {
 			frappe.msgprint({
 				title: __('Notification'),
 				indicator: 'red',
 				message: __('Select a project to show pending actions')
 			});
 		}
-		else if(frm.doc.review_pending_actions && frm.doc.project){
+		else if (frm.doc.review_pending_actions && frm.doc.project) {
 			show_pending_actions(frm);
 		}
-		else{
+		else {
 			frm.clear_table('pending_actions');
 		}
 	},
 
-	project: function(frm) {
+	review_last_mom: function (frm) {
+		if (frm.doc.review_last_mom) {
+			if (frm.doc.project) {
+				frappe.db.get_list('MOM', {
+					filters: {
+						project: frm.doc.project
+					}
+				}).then(records => {
+					if (records && records.length) {
+						show_last_mom_details(frm);
+					}
+					else {
+						frappe.msgprint({
+							title: __('Notification'),
+							indicator: 'blue',
+							message: __('The selected project has no MOMs')
+						});
+						frm.set_value('review_last_mom', 0);
+					}
+				})
+			}
+			else {
+				frappe.msgprint({
+					title: __('Notification'),
+					indicator: 'blue',
+					message: __('Select a Project to show it\'s last MOM details')
+				});
+				frm.set_value('review_last_mom', 0);
+			}
+		}
+		else {
+			frm.clear_table('last_attendees');
+			frm.clear_table('last_actions');
+		}
+	},
+
+	project: function (frm) {
 		frm.clear_table('pending_actions');
 		frm.clear_table('last_attendees');
 		frm.clear_table('last_actions');
@@ -27,25 +63,15 @@ frappe.ui.form.on('MOM', {
 		frm.set_value('review_last_mom', 0);
 	},
 
-	from_time: function(frm) {
-		if(frm.doc.to_time)
+	from_time: function (frm) {
+		if (frm.doc.to_time)
 			calculate_time(frm);
 	},
 
-	to_time: function(frm) {
-		if(frm.doc.from_time) 	
+	to_time: function (frm) {
+		if (frm.doc.from_time)
 			calculate_time(frm);
 	},
-
-	review_last_mom: function (frm) {
-		if (frm.doc.review_last_mom) {
-			frm.call('get_last_mom')
-		}
-		else{
-			frm.clear_table('last_attendees');
-			frm.clear_table('last_actions');
-		}
-	}
 
 });
 
@@ -56,18 +82,18 @@ frappe.ui.form.on('Attendees', {
 	}
 })
 
-let calculate_time = function(frm) {
+let calculate_time = function (frm) {
 	/*
 		to calculate meeting duration
 		output : meeting duration in minutes in meeting_duration field
 	*/
 	let to_time = new Date(frm.doc.to_time)
 	let from_time = new Date(frm.doc.from_time)
-	let duration = ((to_time.getTime() - from_time.getTime())/1000)/60
+	let duration = ((to_time.getTime() - from_time.getTime()) / 1000) / 60
 	frm.set_value('meeting_duration', duration)
 }
 
-let set_filters = function(frm) {
+let set_filters = function (frm) {
 	/*	setting filter for user field in attendees child table	*/
 	if (frm.doc.attendees) {
 		let attendees = '';
@@ -95,11 +121,11 @@ let show_pending_actions = function (frm) {
 	*/
 	frappe.call({
 		method: 'minom.minutes_of_meeting.doctype.mom.mom.get_pending_actions',
-		args:{
-			'project' : frm.doc.project,
+		args: {
+			'project': frm.doc.project,
 		},
-		callback:function(r){
-			r.message.forEach(function(i){
+		callback: function (r) {
+			r.message.forEach(function (i) {
 				frm.add_child('pending_actions', {
 					subject: i.subject,
 					task: i.name,
@@ -108,6 +134,40 @@ let show_pending_actions = function (frm) {
 				})
 				frm.refresh_fields();
 			})
+		}
+	})
+}
+
+let show_last_mom_details = function (frm) {
+	/*
+		to show last mom details of the selected project
+		output: details of last attendees and actions taken in the last mom
+	*/
+	frappe.call({
+		method: 'minom.minutes_of_meeting.doctype.mom.mom.get_last_mom',
+		args: {
+			'project': frm.doc.project,
+		},
+		callback: function (r) {
+			let last_mom = r.message
+			last_mom.attendees.forEach(function (i) {
+				if (i.attended) {
+					frm.add_child('last_attendees', {
+						user: i.user,
+						full_name: i.full_name,
+						attended: i.attended
+					})
+				}
+			})
+			last_mom.actions.forEach(function (i) {
+				frm.add_child('last_actions', {
+					subject: i.subject,
+					priority: i.priority,
+					description: i.description
+				})
+			})
+			frm.refresh_field('last_attendees');
+			frm.refresh_field('last_actions');
 		}
 	})
 }
