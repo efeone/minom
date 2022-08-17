@@ -1,11 +1,13 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "naming_series:",
  "creation": "2022-08-12 15:34:31.373866",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "naming_series",
   "project",
   "discussion_topic",
   "from_time",
@@ -22,7 +24,7 @@
   "last_mom_review_section",
   "review_last_mom",
   "last_mom_name",
-  "section_break_15",
+  "last_attendees",
   "last_actions",
   "pending_actions_section",
   "review_pending_actions",
@@ -143,10 +145,6 @@
    "options": "Actions Taken"
   },
   {
-   "fieldname": "section_break_15",
-   "fieldtype": "Section Break"
-  },
-  {
    "depends_on": "eval:doc.review_last_mom",
    "fieldname": "last_actions",
    "fieldtype": "Table",
@@ -165,12 +163,25 @@
    "fieldtype": "Data",
    "label": "Project Name",
    "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.review_last_mom",
+   "fieldname": "last_attendees",
+   "fieldtype": "Table",
+   "label": "Last Attendees",
+   "options": "Attendees"
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Naming Series",
+   "options": "MOM-.YY.-"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-08-12 16:59:32.602481",
+ "modified": "2022-08-16 12:33:44.002899",
  "modified_by": "Administrator",
  "module": "MINutes Of Meeting",
  "name": "MOM",
