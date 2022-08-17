@@ -7,7 +7,12 @@ from frappe.model.document import Document
 
 
 class MOM(Document):
-    pass
+	def on_submit(self):
+		if self.project:#create task against project
+			mom_doc = frappe.new_doc('Task')
+			mom_doc.subject = self.project_name
+			mom_doc.project = self.project
+			mom_doc.save()
 
 
 @frappe.whitelist()
