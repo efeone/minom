@@ -1,10 +1,18 @@
 # Copyright (c) 2022, efeone Pvt. Ltd. and contributors
 # For license information, please see license.txt
 
+from tabnanny import check
 import frappe
 from frappe.model.document import Document
 
+
 class MOM(Document):
+	def on_submit(self):
+		if self.project:#create task against project
+			mom_doc = frappe.new_doc('Task')
+			mom_doc.subject = self.project_name
+			mom_doc.project = self.project
+			mom_doc.save()
 	@frappe.whitelist()
 	def get_last_mom(self):
 		'''
@@ -22,13 +30,13 @@ class MOM(Document):
 							'full_name': i.full_name,
 							'attended': i.attended
 						})
-				
+
 				for i in last_mom.actions:
 					self.append('last_actions', {
 						'subject': i.subject,
 						'priority': i.priority,
 						'description': i.description
-					})			
+					})
 			else:
 				frappe.msgprint(
 					msg = 'There are no MOMs for the Selected Project',
@@ -42,6 +50,17 @@ class MOM(Document):
 				)
 			self.review_last_mom = 0
 
+
+
+
+@frappe.whitelist()
+def get_last_mom(project):
+    '''
+            getting the last mom of the selected project
+            output: last mom document
+    '''
+    last_mom = frappe.get_last_doc('MOM', filters={'project': project})
+    return last_mom
 
 @frappe.whitelist()
 def get_pending_actions(project):
