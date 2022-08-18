@@ -10,6 +10,7 @@ frappe.ui.form.on('MOM', {
 				indicator: 'red',
 				message: __('Select a project to show pending actions')
 			});
+			frm.set_value('review_pending_actions', 0);
 		}
 		else if (frm.doc.review_pending_actions && frm.doc.project) {
 			show_pending_actions(frm);
@@ -119,21 +120,35 @@ let show_pending_actions = function (frm) {
 	/*  to show pending tasks
 		output: appending pending_actions child table with uncompleted tasks 
 	*/
+	var description = '';
 	frappe.call({
 		method: 'minom.minutes_of_meeting.doctype.mom.mom.get_pending_actions',
 		args: {
 			'project': frm.doc.project,
 		},
 		callback: function (r) {
-			r.message.forEach(function (i) {
-				frm.add_child('pending_actions', {
-					subject: i.subject,
-					task: i.name,
-					priority: i.priority,
-					description: i.description.replace(/(<([^>]+)>)/gi, '')
+			if(r.message && r.message.length){
+				r.message.forEach(function (i) {
+					if (i.description){
+						description = i.description.replace(/(<([^>]+)>)/gi, '')
+					}	
+					frm.add_child('pending_actions', {
+						subject: i.subject,
+						task: i.name,
+						priority: i.priority,
+						description: description
+					})
 				})
-				frm.refresh_fields();
-			})
+				frm.refresh_fields('pending_actions');
+			}
+			else{
+				frappe.msgprint({
+					title: __('Notification'),
+					indicator: 'orange',
+					message: __(' There is no pending task ')
+				});
+				frm.set_value('review_pending_actions', 0);
+			}	
 		}
 	})
 }
