@@ -18,6 +18,7 @@
   "to_time",
   "any_issues",
   "attendees_section",
+  "get_user",
   "attendees",
   "action_taken_section",
   "actions",
@@ -178,12 +179,17 @@
    "fieldtype": "Select",
    "label": "Naming Series",
    "options": "MOM-.YY.-"
+  },
+  {
+   "fieldname": "get_user",
+   "fieldtype": "Button",
+   "label": "Get user"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-08-19 10:49:45.469721",
+ "modified": "2022-08-19 13:21:13.952279",
  "modified_by": "Administrator",
  "module": "MINutes Of Meeting",
  "name": "MOM",

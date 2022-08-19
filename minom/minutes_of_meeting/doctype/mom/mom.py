@@ -36,3 +36,13 @@ def get_pending_actions(project):
        output : list of uncompleted tasks according to the project
     '''
     return frappe.get_all('Task', filters={'project': project, 'status': ['!=', 'Completed']}, fields=['name', 'subject', 'priority', 'description'])
+
+@frappe.whitelist()
+def get_users(project):
+	'''getting users from project
+		output : get users from that project
+	'''
+	get_user = frappe.get_doc('Project', project)
+	return get_user
+
+
