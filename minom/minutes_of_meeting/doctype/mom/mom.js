@@ -62,6 +62,7 @@ frappe.ui.form.on('MOM', {
 		frm.clear_table('last_actions');
 		frm.set_value('review_pending_actions', 0);
 		frm.set_value('review_last_mom', 0);
+		frm.clear_table('attendees');
 	},
 
 	from_time: function (frm) {
@@ -73,6 +74,10 @@ frappe.ui.form.on('MOM', {
 		if (frm.doc.from_time)
 			calculate_time(frm);
 	},
+	get_user: function(frm){
+		show_users(frm);
+
+	}
 
 });
 
@@ -185,4 +190,27 @@ let show_last_mom_details = function (frm) {
 			frm.refresh_field('last_actions');
 		}
 	})
+}
+
+let show_users = function (frm) {
+	/*
+		to show users from the project
+		output: get users from the project
+	*/
+	frappe.call({
+		method: 'minom.minutes_of_meeting.doctype.mom.mom.get_users',
+		args: {
+			'project': frm.doc.project,
+		},
+		callback: function (r) {
+			let get_user = r.message
+			get_user.users.forEach(function (i) {
+				frm.add_child('attendees', {
+					full_name: i.full_name
+				})
+			})
+			frm.refresh_fields('attendees');
+		}
+	})
+	frm.clear_table('attendees');
 }
