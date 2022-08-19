@@ -1,0 +1,133 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2022-08-19 12:03:32.566785",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "date",
+  "column_break_16",
+  "status_of_followup",
+  "followup_for_section",
+  "mom",
+  "project",
+  "supervisor",
+  "column_break_8",
+  "employee",
+  "project_name",
+  "site_location",
+  "followup_details_section",
+  "remarks",
+  "reason_for_followup",
+  "actions_on_followup"
+ ],
+ "fields": [
+  {
+   "fieldname": "mom",
+   "fieldtype": "Link",
+   "label": "MOM",
+   "options": "MOM"
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date"
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "label": "Employee",
+   "options": "Employee"
+  },
+  {
+   "fetch_from": "mom.project",
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "label": "Project",
+   "options": "Project"
+  },
+  {
+   "fetch_from": "project.project_name",
+   "fieldname": "project_name",
+   "fieldtype": "Data",
+   "label": "Project Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "supervisor",
+   "fieldtype": "Link",
+   "label": "Supervisor",
+   "options": "User"
+  },
+  {
+   "fieldname": "site_location",
+   "fieldtype": "Data",
+   "label": "Site Location"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "reason_for_followup",
+   "fieldtype": "Small Text",
+   "label": "Reason for Followup"
+  },
+  {
+   "fieldname": "actions_on_followup",
+   "fieldtype": "Table",
+   "label": "Actions",
+   "options": "Actions Taken"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "status_of_followup",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Pending\nCompleted\nCancelled"
+  },
+  {
+   "fieldname": "followup_for_section",
+   "fieldtype": "Section Break",
+   "label": "Followup for"
+  },
+  {
+   "fieldname": "followup_details_section",
+   "fieldtype": "Section Break",
+   "label": "Followup Details"
+  },
+  {
+   "fieldname": "column_break_16",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_8",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2022-08-19 12:31:23.879393",
+ "modified_by": "Administrator",
+ "module": "MINutes Of Meeting",
+ "name": "MOM Followup",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}
