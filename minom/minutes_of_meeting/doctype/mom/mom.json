@@ -64,9 +64,11 @@
    "label": "Discussion Topic"
   },
   {
+   "default": "Now",
    "fieldname": "from_time",
    "fieldtype": "Datetime",
-   "label": "From Time"
+   "label": "From Time",
+   "reqd": 1
   },
   {
    "fieldname": "to_time",
@@ -181,7 +183,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-08-16 12:33:44.002899",
+ "modified": "2022-08-19 10:49:45.469721",
  "modified_by": "Administrator",
  "module": "MINutes Of Meeting",
  "name": "MOM",
