@@ -81,7 +81,16 @@ frappe.ui.form.on('MOM', {
 			calculate_time(frm);
 	},
 	get_user: function(frm){
+		if (!frm.doc.project) {
+			frappe.msgprint({
+				title: __('Notification'),
+				indicator: 'red',
+				message: __('Select a project to proceed')
+			});
+		}
+		else{ 
 		show_users(frm);
+	}
 
 	}
 
@@ -215,12 +224,22 @@ let show_users = function (frm) {
 		},
 		callback: function (r) {
 			let get_user = r.message
-			get_user.users.forEach(function (i) {
-				frm.add_child('attendees', {
+			if(get_user.length){
+				get_user.users.forEach(function (i) {
+					frm.add_child('attendees', {
 					full_name: i.full_name
 				})
 			})
 			frm.refresh_fields('attendees');
+			}
+			else{
+				frappe.msgprint({
+					title: __('Notification'),
+					indicator: 'red',
+					message: __(' There is no user in {0}' ,[frm.doc.project])
+				});
+
+			}
 		}
 	})
 	frm.clear_table('attendees');
