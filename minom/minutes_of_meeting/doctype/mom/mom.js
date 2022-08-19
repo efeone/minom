@@ -3,6 +3,12 @@
 
 frappe.ui.form.on('MOM', {
 
+	before_submit: function (frm) {
+		if(!frm.doc.to_time) {
+			set_to_time(frm);
+		}
+	},
+
 	review_pending_actions: function (frm) {
 		if (frm.doc.review_pending_actions && !frm.doc.project) {
 			frappe.msgprint({
@@ -95,8 +101,14 @@ let calculate_time = function (frm) {
 	*/
 	let to_time = new Date(frm.doc.to_time)
 	let from_time = new Date(frm.doc.from_time)
-	let duration = ((to_time.getTime() - from_time.getTime()) / 1000) / 60
-	frm.set_value('meeting_duration', duration)
+	if (to_time < from_time) {
+		frm.set_value('from_time','')
+		frm.set_value('to_time','')
+		frm.set_value('meeting_duration', 0)
+		frappe.throw('From time should be less than To time')
+	}
+	let duration = ((to_time - from_time) / 1000) / 60
+	frm.set_value('meeting_duration', duration)	
 }
 
 let set_filters = function (frm) {
@@ -191,7 +203,6 @@ let show_last_mom_details = function (frm) {
 		}
 	})
 }
-
 let show_users = function (frm) {
 	/*
 		to show users from the project
@@ -213,4 +224,12 @@ let show_users = function (frm) {
 		}
 	})
 	frm.clear_table('attendees');
+}
+
+let set_to_time = function (frm) {
+	/*
+		gets the current time and set it as 'To Time'
+	*/
+	let time = frappe.datetime.now_datetime()
+	frm.set_value('to_time', time)
 }

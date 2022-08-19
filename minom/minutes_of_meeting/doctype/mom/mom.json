@@ -65,9 +65,11 @@
    "label": "Discussion Topic"
   },
   {
+   "default": "Now",
    "fieldname": "from_time",
    "fieldtype": "Datetime",
-   "label": "From Time"
+   "label": "From Time",
+   "reqd": 1
   },
   {
    "fieldname": "to_time",
