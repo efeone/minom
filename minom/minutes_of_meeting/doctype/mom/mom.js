@@ -2,6 +2,13 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('MOM', {
+	
+	refresh: function (frm) {
+		var name;
+		var value;
+		add_custom_button_for_attendees( frm, name = 'Uncheck All', value = 0 );
+		add_custom_button_for_attendees( frm, name = 'Check All', value = 1 );
+	},
 
 	before_submit: function (frm) {
 		if(!frm.doc.to_time) {
@@ -233,3 +240,21 @@ let set_to_time = function (frm) {
 	let time = frappe.datetime.now_datetime()
 	frm.set_value('to_time', time)
 }
+
+let add_custom_button_for_attendees = function (frm, name, value ) {
+	/*
+	adding custom button for attendees child table
+	name : name of the button
+	value : boolean value
+	output : checking/unchecking the checkbox attended in the attendees child table
+	*/
+	frm.fields_dict['attendees'].grid.add_custom_button(__( name ),
+		function () {
+			if (frm.doc.attendees && frm.doc.attendees.length) {
+				frm.doc.attendees.forEach(function (i) {
+					frappe.model.set_value(i.doctype, i.name, 'attended', value);
+				})
+			}
+		});
+	frm.fields_dict['attendees'].grid.grid_buttons.find('.btn-custom').removeClass('btn-default').addClass('btn btn-xs btn-secondary grid-add-row');
+} 
