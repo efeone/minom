@@ -9,14 +9,12 @@
  "field_order": [
   "naming_series",
   "project",
-  "discussion_topic",
   "from_time",
   "meeting_duration",
   "column_break_5",
   "project_name",
-  "date",
+  "discussion_topic",
   "to_time",
-  "any_issues",
   "attendees_section",
   "get_user",
   "attendees",
@@ -41,14 +39,6 @@
    "label": "Project",
    "options": "Project",
    "reqd": 1
-  },
-  {
-   "default": "Today",
-   "fieldname": "date",
-   "fieldtype": "Date",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Date"
   },
   {
    "fieldname": "amended_from",
@@ -82,13 +72,6 @@
    "fieldtype": "Float",
    "label": "Meeting Duration",
    "read_only": 1
-  },
-  {
-   "default": "Yes",
-   "fieldname": "any_issues",
-   "fieldtype": "Select",
-   "label": "Any Issues",
-   "options": "Yes\nNo"
   },
   {
    "fieldname": "column_break_5",
@@ -189,7 +172,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-08-19 13:21:13.952279",
+ "modified": "2022-08-22 11:17:42.871461",
  "modified_by": "Administrator",
  "module": "MINutes Of Meeting",
  "name": "MOM",
