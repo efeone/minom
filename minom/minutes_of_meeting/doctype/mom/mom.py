@@ -17,8 +17,43 @@ class MOM(Document):
 				mom_doc.priority = actions_list.priority
 				mom_doc.description = actions_list.description
 				mom_doc.save()
-			frappe.msgprint(_('Task is created'), alert=True)
+			frappe.msgprint(_('Task is created'), alert=True)	
+		self.create_follow_up()
 
+	def create_follow_up(self):
+		'''
+		creating MOM Follow Up while submitting MOM 
+		output: new MOM Follow Up with selected tasks
+		'''
+		if self.follow_up_needed:
+			mom_follow_up_doc = frappe.new_doc('MOM Followup')
+			mom_follow_up_doc.mom = self.name
+			mom_follow_up_doc.date = self.to_time
+			mom_follow_up_doc.user = self.user
+			mom_follow_up_doc.remarks = self.remarks
+			mom_follow_up_doc.reason_for_followup = self.reason_for_followup
+			if self.actions:
+				table = self.actions
+				self.append_child_table(table, mom_follow_up_doc)
+			if self.pending_actions:
+				table = self.pending_actions
+				self.append_child_table(table, mom_follow_up_doc)							
+			mom_follow_up_doc.save()
+			frappe.msgprint(_('MOM Follow Up is created'), alert=True)
+	def append_child_table(self, table, mom_follow_up_doc):
+		''' appending child table
+			table: name of child table
+			mom_follow_up_doc: object of new MOM Followup
+			output: appended table with required fields
+		'''
+		for task in table:
+			if task.need_follow_up:
+				mom_follow_up_doc.append('actions_on_followup', {
+					'task': task.task,
+					'subject': task.subject,
+					'priority': task.priority,
+					'description': task.description
+					})				
 
 @frappe.whitelist()
 def get_last_mom(project):

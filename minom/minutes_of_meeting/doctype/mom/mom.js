@@ -102,6 +102,11 @@ frappe.ui.form.on('MOM', {
 		else{ 
 			show_users(frm);
 		}
+	},
+	follow_up_needed: function (frm){
+		if(!frm.doc.user){
+			frm.set_value( 'user', frappe.session.user ); //setting value for user field as current user
+		};
 	}
 });
 
@@ -110,7 +115,19 @@ frappe.ui.form.on('Attendees', {
 	user(frm, cdt, cdn) {
 		set_filters(frm);
 	}
-})
+});
+
+frappe.ui.form.on('Actions Taken', {
+	need_follow_up: function (frm, cdt, cdn) {
+		var d = locals[cdt][cdn];
+		if ( d.need_follow_up ){
+			frm.set_value( 'follow_up_needed', 1);//ticking follow_up_needed
+		}
+		else{
+			checking_follow_up_needed( frm );
+		}
+	}
+});
 
 let calculate_time = function (frm) {
 	/*
@@ -279,3 +296,28 @@ let add_custom_button_for_attendees = function (frm, name, value ) {
 		});
 	frm.fields_dict['attendees'].grid.grid_buttons.find('.btn-custom').removeClass('btn-default').addClass('btn btn-xs btn-secondary grid-add-row');
 } 
+let checking_follow_up_needed = function ( frm ) {
+	/*
+	checking follow up needed for any actions
+	output : unchecking the follow up needed checkbox if no actions needed follow up
+	*/
+	var actions = false;
+	var pending_actions = false;
+	if( frm.doc.actions && frm.doc.actions.length ){
+		frm.doc.actions.forEach( function(i){
+			if ( i.need_follow_up ){
+				actions = true;
+			}
+		});
+	};
+	if( frm.doc.pending_actions && frm.doc.pending_actions.length ){
+		frm.doc.pending_actions.forEach( function(i){
+			if ( i.need_follow_up ){
+				pending_actions = true;
+			}
+		});
+	};
+	if ( actions == false && pending_actions == false ){
+		frm.set_value( 'follow_up_needed', 0);
+	}
+}

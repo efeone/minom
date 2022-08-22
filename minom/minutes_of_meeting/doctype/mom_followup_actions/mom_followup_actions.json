@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "creation": "2022-08-12 14:16:13.064845",
+ "creation": "2022-08-22 13:05:30.084045",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
@@ -11,15 +11,25 @@
   "column_break_2",
   "priority",
   "section_break_4",
-  "description",
-  "need_follow_up"
+  "description"
  ],
  "fields": [
+  {
+   "fieldname": "task",
+   "fieldtype": "Link",
+   "label": "Task",
+   "options": "Task",
+   "read_only": 1
+  },
   {
    "fieldname": "subject",
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Subject"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "priority",
@@ -29,41 +39,23 @@
    "options": "Low\nMedium\nHigh\nUrgent"
   },
   {
-   "fieldname": "description",
-   "fieldtype": "Small Text",
-   "in_list_view": 1,
-   "label": "Description"
-  },
-  {
-   "fieldname": "column_break_2",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "section_break_4",
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "task",
-   "fieldtype": "Link",
-   "label": "Task",
-   "options": "Task",
-   "read_only": 1
-  },
-  {
-   "default": "0",
-   "fieldname": "need_follow_up",
-   "fieldtype": "Check",
+   "fieldname": "description",
+   "fieldtype": "Small Text",
    "in_list_view": 1,
-   "label": "Need Follow Up"
+   "label": "Description"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2022-08-22 13:07:14.443061",
+ "modified": "2022-08-22 13:05:30.084045",
  "modified_by": "Administrator",
  "module": "MINutes Of Meeting",
- "name": "Actions Taken",
+ "name": "MOM Followup Actions",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

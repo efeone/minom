@@ -1,11 +1,13 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "naming_series:",
  "creation": "2022-08-19 12:03:32.566785",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "naming_series",
   "date",
   "column_break_16",
   "status_of_followup",
@@ -14,13 +16,13 @@
   "project",
   "supervisor",
   "column_break_8",
-  "employee",
+  "user",
   "project_name",
   "site_location",
   "followup_details_section",
+  "actions_on_followup",
   "remarks",
-  "reason_for_followup",
-  "actions_on_followup"
+  "reason_for_followup"
  ],
  "fields": [
   {
@@ -30,22 +32,18 @@
    "options": "MOM"
   },
   {
+   "default": "Now",
    "fieldname": "date",
-   "fieldtype": "Date",
+   "fieldtype": "Datetime",
    "label": "Date"
-  },
-  {
-   "fieldname": "employee",
-   "fieldtype": "Link",
-   "label": "Employee",
-   "options": "Employee"
   },
   {
    "fetch_from": "mom.project",
    "fieldname": "project",
    "fieldtype": "Link",
    "label": "Project",
-   "options": "Project"
+   "options": "Project",
+   "read_only": 1
   },
   {
    "fetch_from": "project.project_name",
@@ -55,15 +53,18 @@
    "read_only": 1
   },
   {
+   "fetch_from": "project.project_supervisor",
    "fieldname": "supervisor",
    "fieldtype": "Link",
    "label": "Supervisor",
    "options": "User"
   },
   {
+   "fetch_from": "project.site_location",
    "fieldname": "site_location",
-   "fieldtype": "Data",
-   "label": "Site Location"
+   "fieldtype": "Link",
+   "label": "Site Location",
+   "options": "Location"
   },
   {
    "fieldname": "remarks",
@@ -79,7 +80,7 @@
    "fieldname": "actions_on_followup",
    "fieldtype": "Table",
    "label": "Actions",
-   "options": "Actions Taken"
+   "options": "MOM Followup Actions"
   },
   {
    "default": "Pending",
@@ -105,11 +106,23 @@
   {
    "fieldname": "column_break_8",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "User",
+   "options": "User"
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Naming Series",
+   "options": "MOMF-.YY.-"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-08-19 12:31:23.879393",
+ "modified": "2022-08-22 13:06:28.241822",
  "modified_by": "Administrator",
  "module": "MINutes Of Meeting",
  "name": "MOM Followup",
