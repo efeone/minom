@@ -106,23 +106,23 @@ app_license = "MIT"
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-# 	"all": [
-# 		"minom.tasks.all"
-# 	],
-# 	"daily": [
-# 		"minom.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"minom.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"minom.tasks.weekly"
-# 	]
-# 	"monthly": [
-# 		"minom.tasks.monthly"
-# 	]
-# }
+scheduler_events = {
+	# "all": [
+	# 	"minom.tasks.all"
+	# ],
+	# "daily": [
+	# 	"minom.tasks.daily"
+	# ],
+	"hourly": [
+		"minom.minutes_of_meeting.utils.send_mom_followup_notif"
+	]
+	# "weekly": [
+	# 	"minom.tasks.weekly"
+	# ],
+	# "monthly": [
+	# 	"minom.tasks.monthly"
+	# ]
+}
 
 # Testing
 # -------
