@@ -9,16 +9,21 @@ from frappe.model.document import Document
 
 class MOM(Document):
 	def on_submit(self):
+		self.create_task()
+	def create_task(self):
 		if self.project:#create task aginst subject while submitting MOM
+			flag = False
 			for actions_list in self.actions:
-				mom_doc = frappe.new_doc('Task')
-				mom_doc.project = self.project
-				mom_doc.subject = actions_list.subject
-				mom_doc.priority = actions_list.priority
-				mom_doc.description = actions_list.description
-				mom_doc.save()
-			frappe.msgprint(_('Task is created'), alert=True)
-
+				if not actions_list.task:
+					mom_doc = frappe.new_doc('Task')
+					mom_doc.project = self.project
+					mom_doc.subject = actions_list.subject
+					mom_doc.priority = actions_list.priority
+					mom_doc.description = actions_list.description
+					flag = True
+					mom_doc.save()
+			if flag == True:
+				frappe.msgprint(_('Task is created'), alert=True )
 
 @frappe.whitelist()
 def get_last_mom(project):

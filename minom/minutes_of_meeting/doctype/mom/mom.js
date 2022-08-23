@@ -16,20 +16,16 @@ frappe.ui.form.on('MOM', {
 		}
 	},
 
-	review_pending_actions: function (frm) {
-		if (frm.doc.review_pending_actions && !frm.doc.project) {
+	pending_actions: function (frm) {
+		if (!frm.doc.project) {
 			frappe.msgprint({
 				title: __('Notification'),
 				indicator: 'red',
 				message: __('Select a project to show pending actions')
 			});
-			frm.set_value('review_pending_actions', 0);
 		}
-		else if (frm.doc.review_pending_actions && frm.doc.project) {
+		else if (frm.doc.project) {
 			show_pending_actions(frm);
-		}
-		else {
-			frm.clear_table('pending_actions');
 		}
 	},
 
@@ -70,10 +66,10 @@ frappe.ui.form.on('MOM', {
 	},
 
 	project: function (frm) {
-		frm.clear_table('pending_actions');
+		frm.set_df_property('pending_actions', 'hidden', 0)
+		frm.clear_table('actions');
 		frm.clear_table('last_attendees');
 		frm.clear_table('last_actions');
-		frm.set_value('review_pending_actions', 0);
 		frm.set_value('review_last_mom', 0);
 		frm.clear_table('attendees');
 		if(!frm.docproject){
@@ -167,14 +163,15 @@ let show_pending_actions = function (frm) {
 					if (i.description){
 						description = i.description.replace(/(<([^>]+)>)/gi, '')
 					}	
-					frm.add_child('pending_actions', {
+					frm.add_child('actions', {
 						subject: i.subject,
 						task: i.name,
 						priority: i.priority,
 						description: description
 					})
 				})
-				frm.refresh_fields('pending_actions');
+				frm.refresh_fields('actions');
+				frm.set_df_property('pending_actions', 'hidden', 1)
 			}
 			else{
 				frappe.msgprint({
@@ -182,7 +179,6 @@ let show_pending_actions = function (frm) {
 					indicator: 'orange',
 					message: __(' There is no pending task ')
 				});
-				frm.set_value('review_pending_actions', 0);
 			}	
 		}
 	})
