@@ -19,15 +19,18 @@
   "get_user",
   "attendees",
   "action_taken_section",
+  "pending_actions",
   "actions",
   "last_mom_review_section",
   "review_last_mom",
   "last_mom_name",
   "last_attendees",
   "last_actions",
-  "pending_actions_section",
-  "review_pending_actions",
-  "pending_actions",
+  "follow_up_section",
+  "follow_up_needed",
+  "user",
+  "remarks",
+  "reason_for_followup",
   "amended_from"
  ],
  "fields": [
@@ -107,28 +110,16 @@
    "read_only": 1
   },
   {
-   "fieldname": "pending_actions_section",
-   "fieldtype": "Section Break",
-   "label": "Pending Actions"
-  },
-  {
-   "default": "0",
-   "fieldname": "review_pending_actions",
-   "fieldtype": "Check",
-   "label": "Review Pending Actions"
-  },
-  {
    "fieldname": "actions",
    "fieldtype": "Table",
    "label": "Actions",
    "options": "Actions Taken"
   },
   {
-   "depends_on": "eval:doc.review_pending_actions",
+   "default": "0",
    "fieldname": "pending_actions",
-   "fieldtype": "Table",
-   "label": "Pending Actions",
-   "options": "Actions Taken"
+   "fieldtype": "Button",
+   "label": "Get Pending Actions"
   },
   {
    "depends_on": "eval:doc.review_last_mom",
@@ -167,12 +158,43 @@
    "fieldname": "get_user",
    "fieldtype": "Button",
    "label": "Get user"
+  },
+  {
+   "default": "0",
+   "fieldname": "follow_up_needed",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Follow Up Needed"
+  },
+  {
+   "fieldname": "follow_up_section",
+   "fieldtype": "Section Break",
+   "label": "Follow Up"
+  },
+  {
+   "depends_on": "eval: doc.follow_up_needed == 1",
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "depends_on": "eval: doc.follow_up_needed == 1",
+   "fieldname": "reason_for_followup",
+   "fieldtype": "Small Text",
+   "label": "Reason for Followup"
+  },
+  {
+   "depends_on": "eval: doc.follow_up_needed == 1",
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "User",
+   "options": "User"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-08-22 11:17:42.871461",
+ "modified": "2022-08-23 14:21:20.699483",
  "modified_by": "Administrator",
  "module": "MINutes Of Meeting",
  "name": "MOM",

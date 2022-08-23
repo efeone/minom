@@ -1,6 +1,5 @@
 // Copyright (c) 2022, efeone Pvt. Ltd. and contributors
 // For license information, please see license.txt
-
 frappe.ui.form.on('MOM', {
 	
 	refresh: function (frm) {
@@ -16,20 +15,16 @@ frappe.ui.form.on('MOM', {
 		}
 	},
 
-	review_pending_actions: function (frm) {
-		if (frm.doc.review_pending_actions && !frm.doc.project) {
+	pending_actions: function (frm) {
+		if (!frm.doc.project) {
 			frappe.msgprint({
 				title: __('Notification'),
 				indicator: 'red',
 				message: __('Select a project to show pending actions')
 			});
-			frm.set_value('review_pending_actions', 0);
 		}
-		else if (frm.doc.review_pending_actions && frm.doc.project) {
+		else if (frm.doc.project) {
 			show_pending_actions(frm);
-		}
-		else {
-			frm.clear_table('pending_actions');
 		}
 	},
 
@@ -70,10 +65,10 @@ frappe.ui.form.on('MOM', {
 	},
 
 	project: function (frm) {
-		frm.clear_table('pending_actions');
+		frm.set_df_property('pending_actions', 'hidden', 0)
+		frm.clear_table('actions');
 		frm.clear_table('last_attendees');
 		frm.clear_table('last_actions');
-		frm.set_value('review_pending_actions', 0);
 		frm.set_value('review_last_mom', 0);
 		frm.clear_table('attendees');
 		if(!frm.docproject){
@@ -102,9 +97,20 @@ frappe.ui.form.on('MOM', {
 		else{ 
 			show_users(frm);
 		}
+	},
+
+	follow_up_needed: function (frm){
+		if(!frm.doc.user){
+			frm.set_value( 'user', frappe.session.user ); //setting value for user field as current user
+		};
 	}
 });
 
+frappe.ui.form.on('Actions Taken', {
+	need_follow_up: function (frm, cdt, cdn) {
+		mom_follow_up(frm, cdt, cdn);
+	}
+});
 
 frappe.ui.form.on('Attendees', {
 	user(frm, cdt, cdn) {
@@ -167,14 +173,15 @@ let show_pending_actions = function (frm) {
 					if (i.description){
 						description = i.description.replace(/(<([^>]+)>)/gi, '')
 					}	
-					frm.add_child('pending_actions', {
+					frm.add_child('actions', {
 						subject: i.subject,
 						task: i.name,
 						priority: i.priority,
 						description: description
 					})
 				})
-				frm.refresh_fields('pending_actions');
+				frm.refresh_fields('actions');
+				frm.set_df_property('pending_actions', 'hidden', 1)
 			}
 			else{
 				frappe.msgprint({
@@ -182,7 +189,6 @@ let show_pending_actions = function (frm) {
 					indicator: 'orange',
 					message: __(' There is no pending task ')
 				});
-				frm.set_value('review_pending_actions', 0);
 			}	
 		}
 	})
@@ -279,3 +285,25 @@ let add_custom_button_for_attendees = function (frm, name, value ) {
 		});
 	frm.fields_dict['attendees'].grid.grid_buttons.find('.btn-custom').removeClass('btn-default').addClass('btn btn-xs btn-secondary grid-add-row');
 } 
+
+let mom_follow_up = function (frm, cdt, cdn){
+	/*
+	showing/hiding follow up section
+	output: checking/unchecking follow_up_needed field
+	 */
+	let d = locals[cdt][cdn];
+	if ( d.need_follow_up ){
+		frm.set_value( 'follow_up_needed', 1);//ticking follow_up_needed
+	}
+	else{
+		let flag = false;
+		frm.doc.actions.forEach(function(i){
+			if(i.need_follow_up){
+				flag = true;
+			}
+		})
+		if (flag == false){
+			frm.set_value( 'follow_up_needed', 0)
+		}
+	}
+}
