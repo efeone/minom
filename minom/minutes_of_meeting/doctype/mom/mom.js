@@ -1,6 +1,5 @@
 // Copyright (c) 2022, efeone Pvt. Ltd. and contributors
 // For license information, please see license.txt
-
 frappe.ui.form.on('MOM', {
 	
 	refresh: function (frm) {
@@ -98,9 +97,20 @@ frappe.ui.form.on('MOM', {
 		else{ 
 			show_users(frm);
 		}
+	},
+
+	follow_up_needed: function (frm){
+		if(!frm.doc.user){
+			frm.set_value( 'user', frappe.session.user ); //setting value for user field as current user
+		};
 	}
 });
 
+frappe.ui.form.on('Actions Taken', {
+	need_follow_up: function (frm, cdt, cdn) {
+		mom_follow_up(frm, cdt, cdn);
+	}
+});
 
 frappe.ui.form.on('Attendees', {
 	user(frm, cdt, cdn) {
@@ -275,3 +285,25 @@ let add_custom_button_for_attendees = function (frm, name, value ) {
 		});
 	frm.fields_dict['attendees'].grid.grid_buttons.find('.btn-custom').removeClass('btn-default').addClass('btn btn-xs btn-secondary grid-add-row');
 } 
+
+let mom_follow_up = function (frm, cdt, cdn){
+	/*
+	showing/hiding follow up section
+	output: checking/unchecking follow_up_needed field
+	 */
+	let d = locals[cdt][cdn];
+	if ( d.need_follow_up ){
+		frm.set_value( 'follow_up_needed', 1);//ticking follow_up_needed
+	}
+	else{
+		let flag = false;
+		frm.doc.actions.forEach(function(i){
+			if(i.need_follow_up){
+				flag = true;
+			}
+		})
+		if (flag == false){
+			frm.set_value( 'follow_up_needed', 0)
+		}
+	}
+}

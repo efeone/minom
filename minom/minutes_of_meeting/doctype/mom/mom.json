@@ -26,6 +26,11 @@
   "last_mom_name",
   "last_attendees",
   "last_actions",
+  "follow_up_section",
+  "follow_up_needed",
+  "user",
+  "remarks",
+  "reason_for_followup",
   "amended_from"
  ],
  "fields": [
@@ -153,12 +158,43 @@
    "fieldname": "get_user",
    "fieldtype": "Button",
    "label": "Get user"
+  },
+  {
+   "default": "0",
+   "fieldname": "follow_up_needed",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Follow Up Needed"
+  },
+  {
+   "fieldname": "follow_up_section",
+   "fieldtype": "Section Break",
+   "label": "Follow Up"
+  },
+  {
+   "depends_on": "eval: doc.follow_up_needed == 1",
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "depends_on": "eval: doc.follow_up_needed == 1",
+   "fieldname": "reason_for_followup",
+   "fieldtype": "Small Text",
+   "label": "Reason for Followup"
+  },
+  {
+   "depends_on": "eval: doc.follow_up_needed == 1",
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "User",
+   "options": "User"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-08-23 11:46:14.398689",
+ "modified": "2022-08-23 14:21:20.699483",
  "modified_by": "Administrator",
  "module": "MINutes Of Meeting",
  "name": "MOM",

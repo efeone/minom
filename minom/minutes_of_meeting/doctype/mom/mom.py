@@ -10,6 +10,7 @@ from frappe.model.document import Document
 class MOM(Document):
 	def on_submit(self):
 		self.create_task()
+		self.create_follow_up()
 	def create_task(self):
 		if self.project:#create task aginst subject while submitting MOM
 			flag = False
@@ -23,7 +24,30 @@ class MOM(Document):
 					flag = True
 					mom_doc.save()
 			if flag == True:
-				frappe.msgprint(_('Task is created'), alert=True )
+				frappe.msgprint(_('Task is created'), alert = True )
+	def create_follow_up(self):
+		'''
+		creating MOM Follow Up while submitting MOM 
+		output: new MOM Follow Up with selected tasks
+		'''
+		if self.follow_up_needed:
+			mom_follow_up_doc = frappe.new_doc('MOM Followup')
+			mom_follow_up_doc.mom = self.name
+			mom_follow_up_doc.date = self.to_time
+			mom_follow_up_doc.user = self.user
+			mom_follow_up_doc.remarks = self.remarks
+			mom_follow_up_doc.reason_for_followup = self.reason_for_followup
+			if self.actions:
+				for task in self.actions:
+					if task.need_follow_up:
+						mom_follow_up_doc.append('actions_on_followup', {
+							'task': task.task,
+							'subject': task.subject,
+							'priority': task.priority,
+							'description': task.description
+							})										
+			mom_follow_up_doc.save()
+			frappe.msgprint(_('MOM Follow Up is created'), alert = True)
 
 @frappe.whitelist()
 def get_last_mom(project):
