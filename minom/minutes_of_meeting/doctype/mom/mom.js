@@ -71,10 +71,7 @@ frappe.ui.form.on('MOM', {
 		frm.clear_table('last_actions');
 		frm.set_value('review_last_mom', 0);
 		frm.clear_table('attendees');
-		if(!frm.docproject){
-			frm.clear_table('attendees');
-			frm.refresh_fields('attendees');
-		}
+		frm.set_value( 'follow_up_needed', 0)
 	},
 
 	from_time: function (frm) {
@@ -114,7 +111,16 @@ frappe.ui.form.on('Actions Taken', {
 
 frappe.ui.form.on('Attendees', {
 	user(frm, cdt, cdn) {
-		set_filters(frm);
+		let attendees;
+		attendees = attendees_list(frm);
+		set_filters(frm, attendees);
+	},
+
+	before_attendees_remove (frm, cdt, cdn){
+		let d = locals[cdt][cdn];
+		let attendees;
+		attendees = attendees_list(frm);
+		set_filters(frm, attendees = attendees.replace(d.user,''));
 	}
 })
 
@@ -135,18 +141,19 @@ let calculate_time = function (frm) {
 	frm.set_value('meeting_duration', duration)	
 }
 
-let set_filters = function (frm) {
+let attendees_list = function (frm){
+	/* listing the users of attendees*/
+	let attendees = '';
+	frm.doc.attendees.forEach(function (attendee, i) {
+		if(attendee.user){
+				attendees += attendee.user + ', ';
+		}
+	});
+	return attendees;
+} 
+
+let set_filters = function (frm ,attendees) {
 	/*	setting filter for user field in attendees child table	*/
-	if (frm.doc.attendees) {
-		let attendees = '';
-		frm.doc.attendees.forEach(function (attendee, i) {
-			if (i === 0) {
-				attendees += attendee.user;
-			}
-			else {
-				attendees += ', ' + attendee.user;
-			}
-		});
 		frm.set_query('user', 'attendees', function (doc, cdt, cdn) {
 			return {
 				filters: {
@@ -154,7 +161,6 @@ let set_filters = function (frm) {
 				}
 			}
 		});
-	}
 }
 
 let show_pending_actions = function (frm) {
@@ -240,12 +246,16 @@ let show_users = function (frm) {
 		callback: function (r) {
 			let get_user = r.message
 			if(get_user.users.length){
+				let attendees = '';
 				get_user.users.forEach(function (i) {
 					frm.add_child('attendees', {
-					full_name: i.full_name
+						user: i.user,
+						full_name: i.full_name
+					})
+				attendees += i.user + ','; //adding user into attendees list
 				})
-			})
-			frm.refresh_fields('attendees');
+				frm.refresh_field('attendees');
+				set_filters(frm, attendees);
 			}
 			else{
 				frappe.msgprint({

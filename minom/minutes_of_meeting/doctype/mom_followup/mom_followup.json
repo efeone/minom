@@ -56,6 +56,7 @@
   },
   {
    "fetch_from": "project.project_supervisor",
+   "fetch_if_empty": 1,
    "fieldname": "supervisor",
    "fieldtype": "Link",
    "label": "Supervisor",
@@ -63,6 +64,7 @@
   },
   {
    "fetch_from": "project.site_location",
+   "fetch_if_empty": 1,
    "fieldname": "site_location",
    "fieldtype": "Link",
    "label": "Site Location",
@@ -124,7 +126,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-08-22 16:55:56.129283",
+ "modified": "2022-08-24 12:55:01.279979",
  "modified_by": "Administrator",
  "module": "MINutes Of Meeting",
  "name": "MOM Followup",
