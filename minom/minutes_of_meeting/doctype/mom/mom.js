@@ -72,6 +72,9 @@ frappe.ui.form.on('MOM', {
 		frm.set_value('review_last_mom', 0);
 		frm.clear_table('attendees');
 		frm.set_value( 'follow_up_needed', 0)
+		frm.refresh_fields('attendees');
+		frm.refresh_fields('actions');
+
 	},
 
 	from_time: function (frm) {

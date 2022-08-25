@@ -124,6 +124,8 @@ scheduler_events = {
 	# ]
 }
 
+fixtures = ["MOM Settings"]
+
 # Testing
 # -------
 
