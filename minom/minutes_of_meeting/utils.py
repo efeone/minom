@@ -1,6 +1,7 @@
 import frappe
 from datetime import datetime
 from frappe.utils import time_diff
+from frappe.model.mapper import get_mapped_doc
 
 
 @frappe.whitelist()
@@ -24,7 +25,7 @@ def send_mom_followup_notif():
             difference_in_hours = int(time_diff(now, followup_date).total_seconds()/3600)
             if(time_diff(now, followup_date).days >= 1  or  difference_in_hours >= mom_settings_time):
                 create_momf_pending_notification(mom_followup.name, mom_followup.supervisor)
-                 
+
 
 @frappe.whitelist()
 def create_momf_pending_notification(mom_followup_id, recepient):
@@ -41,3 +42,28 @@ def create_momf_pending_notification(mom_followup_id, recepient):
         notification_log.subject = mom_followup.name + ' is created'
         notification_log.email_content = 'MOM Followup with id ' + mom_followup.name + ' of ' + mom_followup.mom + ' is created. Please check it!.'
     notification_log.save(ignore_permissions=True)
+
+@frappe.whitelist()
+def create_mom(source_name, target_doc = None):
+	doc = get_mapped_doc(
+		'Event',
+		source_name,
+		{
+			'Event': {
+				'doctype': 'MOM',
+				'field_map': [
+					['starts_on', 'from_time'],
+                    ['ends_on', 'to_time'],
+                    ['subject', 'discussion_topic']
+				],
+			}
+		}
+	)
+	return doc
+
+@frappe.whitelist()
+def get_mom_linked_with_event(doc, method):
+    """ method used to get mom name and set it to __onload """
+    if frappe.db.exists('MOM', {'event': doc.name}):
+        mom = frappe.db.get_value("MOM", {"event": doc.name}, "name") or ""
+        doc.set_onload("mom", mom)
