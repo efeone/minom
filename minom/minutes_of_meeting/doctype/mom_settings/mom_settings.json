@@ -6,25 +6,25 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "notification_content",
-  "notification_time_duration_for_mom_followup"
+  "notification_interval",
+  "notification_content_pending_momf"
  ],
  "fields": [
   {
-   "fieldname": "notification_content",
-   "fieldtype": "Text",
-   "label": "Notification content"
+   "fieldname": "notification_interval",
+   "fieldtype": "Time",
+   "label": "Pending Notification for MOM Followup should be send after?"
   },
   {
-   "fieldname": "notification_time_duration_for_mom_followup",
-   "fieldtype": "Time",
-   "label": "Notification time duration for MOM Followup"
+   "fieldname": "notification_content_pending_momf",
+   "fieldtype": "Small Text",
+   "label": "Notification content for Pending MOM Followup"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-08-22 20:50:20.619489",
+ "modified": "2022-11-07 15:17:38.037728",
  "modified_by": "Administrator",
  "module": "MINutes Of Meeting",
  "name": "MOM Settings",

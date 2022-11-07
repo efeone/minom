@@ -2,6 +2,7 @@ import frappe
 from datetime import datetime
 from frappe.utils import time_diff
 from frappe.model.mapper import get_mapped_doc
+from frappe.email.doctype.notification.notification import get_context
 
 
 @frappe.whitelist()
@@ -11,37 +12,47 @@ def send_mom_followup_notif():
         output: get notification from MOM Followup
     '''
     mom_settings = frappe.get_doc('MOM Settings')
-    mom_follow_ups = frappe.db.get_all(
-        'MOM Followup', fields=['name', 'date', 'status_of_followup', 'user', 'supervisor'])
+    mom_follow_ups = frappe.db.get_list('MOM Followup', fields=['name','date'], filters={'status_of_followup':'Pending'})
     for mom_followup in mom_follow_ups:
-        followup_date = mom_followup.date
         now = datetime.now()
-        if (mom_followup.status_of_followup == 'Pending'):
-            if (time_diff(now, followup_date).days >= 1):
-                create_momf_pending_notification(mom_followup.name, mom_followup.user)
-                create_momf_pending_notification(mom_followup.name, mom_followup.supervisor)
-        if(mom_followup.status_of_followup != 'Cancelled'):
-            mom_settings_time = mom_settings.notification_time_duration_for_mom_followup
-            difference_in_hours = int(time_diff(now, followup_date).total_seconds()/3600)
-            if(time_diff(now, followup_date).days >= 1  or  difference_in_hours >= mom_settings_time):
-                create_momf_pending_notification(mom_followup.name, mom_followup.supervisor)
+        diff_in_time = time_diff(now, mom_followup.date).days
+        notif_interval = mom_settings.notification_interval or 1
+        if (diff_in_time >= notif_interval):
+            mom_followup_doc = frappe.get_doc('MOM Followup',mom_followup.name)
+            subject = mom_followup_doc.name + ' is Pending'
+            if mom_settings.notification_content_pending_momf:
+                context = get_context(mom_followup_doc)
+                content = frappe.render_template(mom_settings.notification_content_pending_momf, context)
+            else:
+                content = 'MOM Followup with id ' + mom_followup_doc.name + ' of ' + mom_followup_doc.mom + ' is still Pending. Take actions to Complete it ASAP.'
+            create_notification_log(
+                mom_followup_doc,
+                mom_followup_doc.user,
+                subject,
+                content
+                )
+            create_notification_log(
+                mom_followup_doc,
+                mom_followup_doc.supervisor,
+                subject,
+                content
+                )
 
 
-@frappe.whitelist()
-def create_momf_pending_notification(mom_followup_id, recepient):
-    mom_followup = frappe.get_doc('MOM Followup', mom_followup_id)
+def create_notification_log(doc, recipient, subject, content):
+    ''' method is used to create notification log
+        args:
+            doc: document object
+            recipient: notification receiving user
+            subject: subject of notification log '''
     notification_log = frappe.new_doc('Notification Log')
-    notification_log.type = 'Alert'
-    notification_log.document_type = mom_followup.doctype
-    notification_log.document_name = mom_followup.name
-    notification_log.for_user = recepient
-    if (mom_followup.status_of_followup == 'Pending'):
-        notification_log.subject = mom_followup.name + ' is Pending'
-        notification_log.email_content = 'MOM Followup with id ' + mom_followup.name + ' of ' + mom_followup.mom + ' is still Pending. Take actions to Complete it ASAP.'
-    if (mom_followup.status_of_followup != 'Cancelled'):
-        notification_log.subject = mom_followup.name + ' is created'
-        notification_log.email_content = 'MOM Followup with id ' + mom_followup.name + ' of ' + mom_followup.mom + ' is created. Please check it!.'
-    notification_log.save(ignore_permissions=True)
+    notification_log.type = 'Mention'
+    notification_log.document_type = doc.doctype
+    notification_log.document_name = doc.name
+    notification_log.for_user = recipient
+    notification_log.subject = subject
+    notification_log.email_content = content
+    notification_log.save(ignore_permissions = True)
 
 @frappe.whitelist()
 def create_mom(source_name, target_doc = None):
