@@ -114,15 +114,20 @@ scheduler_events = {
 	# "daily": [
 	# 	"minom.tasks.daily"
 	# ],
-	"hourly": [
-		"minom.minutes_of_meeting.utils.send_mom_followup_notif"
-	]
+	# "hourly": [
+	# 	"minom.minutes_of_meeting.utils.send_mom_followup_notif"
+	# ]
 	# "weekly": [
 	# 	"minom.tasks.weekly"
 	# ],
 	# "monthly": [
 	# 	"minom.tasks.monthly"
 	# ]
+	"cron": {
+        "0 8 * * *": [
+            "minom.minutes_of_meeting.utils.send_mom_followup_notif"
+        ]
+    }
 }
 
 fixtures = ["MOM Settings"]
