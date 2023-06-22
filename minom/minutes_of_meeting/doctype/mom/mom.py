@@ -27,7 +27,7 @@ class MOM(Document):
 				frappe.msgprint(_('Task is created'), alert = True )
 	def create_follow_up(self):
 		'''
-		creating MOM Follow Up while submitting MOM 
+		creating MOM Follow Up while submitting MOM
 		output: new MOM Follow Up with selected tasks
 		'''
 		if self.follow_up_needed:
@@ -45,19 +45,18 @@ class MOM(Document):
 							'subject': task.subject,
 							'priority': task.priority,
 							'description': task.description
-							})										
+							})
 			mom_follow_up_doc.save()
 			frappe.msgprint(_('MOM Follow Up is created'), alert = True)
 
 @frappe.whitelist()
 def get_last_mom(project):
-    '''
-            getting the last mom of the selected project
-            output: last mom document
-    '''
-    last_mom = frappe.get_last_doc('MOM', filters={'project': project, 'docstatus':1}, order_by='creation desc')
-    return last_mom
-
+	mom = frappe.db.exists('MOM', {'project': project, 'docstatus':1})
+	if mom:
+		last_mom = frappe.get_last_doc('MOM', filters={'project': project, 'docstatus': 1}, order_by='creation desc')
+		return last_mom
+	else:
+		return None
 
 @frappe.whitelist()
 def get_pending_actions(project):
@@ -73,5 +72,3 @@ def get_users(project):
 	'''
 	get_user = frappe.get_doc('Project', project)
 	return get_user
-
-
