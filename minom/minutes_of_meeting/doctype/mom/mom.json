@@ -126,7 +126,8 @@
    "fieldname": "last_actions",
    "fieldtype": "Table",
    "label": "Last Actions",
-   "options": "Actions Taken"
+   "options": "Actions Taken",
+   "read_only": 1
   },
   {
    "fieldname": "attendees",
@@ -146,7 +147,8 @@
    "fieldname": "last_attendees",
    "fieldtype": "Table",
    "label": "Last Attendees",
-   "options": "Attendees"
+   "options": "Attendees",
+   "read_only": 1
   },
   {
    "fieldname": "naming_series",
@@ -200,7 +202,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-09-23 16:20:29.048740",
+ "modified": "2023-07-18 15:13:52.563672",
  "modified_by": "Administrator",
  "module": "MINutes Of Meeting",
  "name": "MOM",

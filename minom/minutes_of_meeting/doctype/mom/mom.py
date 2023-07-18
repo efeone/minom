@@ -8,9 +8,18 @@ from frappe.model.document import Document
 
 
 class MOM(Document):
+	def validate(self):
+		no_attend = True
+		for attendee in self.attendees:
+				if attendee.attended:
+					no_attend = False
+		if no_attend:
+			frappe.throw('Please Check Attendance of Users')
+
 	def on_submit(self):
 		self.create_task()
 		self.create_follow_up()
+
 	def create_task(self):
 		if self.project:#create task aginst subject while submitting MOM
 			flag = False
