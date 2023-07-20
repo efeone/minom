@@ -62,7 +62,7 @@ class MOM(Document):
 def get_last_mom(project):
 	mom = frappe.db.exists('MOM', {'project': project, 'docstatus':1})
 	if mom:
-		last_mom = frappe.get_last_doc('MOM', filters={'project': project, 'docstatus': 1}, order_by='creation desc')
+		last_mom = frappe.get_last_doc('MOM', filters={'project': project}, order_by='creation desc')
 		return last_mom
 	else:
 		return None
