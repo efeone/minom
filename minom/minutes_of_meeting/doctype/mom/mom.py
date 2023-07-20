@@ -64,7 +64,8 @@ def get_last_mom(project):
             getting the last mom of the selected project
             output: last mom document
     '''
-    last_mom = frappe.get_last_doc('MOM', filters={'project': project, 'docstatus':1}, order_by='creation desc')
+    last_mom = frappe.get_last_doc('MOM', filters={'project': project}, order_by='creation desc')
+
     return last_mom
 
 
