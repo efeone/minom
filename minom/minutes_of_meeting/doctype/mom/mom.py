@@ -60,7 +60,7 @@ class MOM(Document):
 
 @frappe.whitelist()
 def get_last_mom(project):
-	mom = frappe.db.exists('MOM', {'project': project, 'docstatus':1})
+	mom = frappe.db.exists('MOM', {'project': project})
 	if mom:
 		last_mom = frappe.get_last_doc('MOM', filters={'project': project}, order_by='creation desc')
 		return last_mom
